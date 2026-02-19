@@ -1,0 +1,26 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# C3Poh runtime (user-specific, never commit these)
+c3poh.json
+.env
+*.log
+~/.c3poh/
+
+# Python venvs
+.venv/
+venv/
+env/
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp
