@@ -7,7 +7,7 @@ name = "c3poh-for-claudecode"
 version = "0.1.0"
 description = "Telegram bridge for Claude Code. DM your agent, get answers back. Because Claude Code needed a comms droid."
 readme = "README.md"
-license = {text = "MIT"}
+license = {text = "GNU GPLv3"}
 authors = [
   {name = "Andy Rosic", email = "andy@uninvited.llc"}
 ]
@@ -15,7 +15,7 @@ keywords = ["claude", "claude-code", "ai", "telegram", "bot", "messaging", "auto
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
+  "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
