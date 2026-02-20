@@ -230,7 +230,9 @@ pytest tests/ -v
 
 ## License
 
-MIT
+GNU GPLv3 — copy-left, and let's evolve together.
+
+See [LICENSE](LICENSE) for the full text.
 
 ---
 
