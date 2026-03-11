@@ -1,4 +1,8 @@
-# 📡🤖 C3Poh — Telegram Bridge for Claude Code
+# C3Poh — Telegram Bridge for Claude Code
+
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
+[![License](https://img.shields.io/badge/License-GPLv3-green.svg)](LICENSE)
+[![Claude Code](https://img.shields.io/badge/Built%20for-Claude%20Code-orange.svg)](https://claude.ai/code)
 
 > *"I am fluent in over six million forms of communication."*
 > C-3PO handled comms for the Rebellion. C3Poh handles comms for your Claude Code agent.
@@ -9,17 +13,60 @@ You're on your phone. You think of something. You message your agent. Claude Cod
 
 Zero external dependencies. Allowlist-based access control baked in. Takes 5 minutes to set up.
 
+<!-- TODO: Add screenshot of Telegram conversation with C3Poh -->
+
 ---
 
-## Why this exists
+## Architecture
 
-OpenClaw ships first-party Telegram integration with allowlist-based DM policies. Claude Code has no messaging — it's terminal-only.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         Your Machine                             │
+│                                                                  │
+│  ┌──────────────┐      ┌──────────────┐      ┌──────────────┐  │
+│  │              │      │              │      │              │  │
+│  │   C3Poh      │◄────►│ Claude Code  │      │   TinMan     │  │
+│  │   (bot)      │      │   (claude)   │      │  (scheduler) │  │
+│  │              │      │              │      │              │  │
+│  └──────┬───────┘      └──────────────┘      └──────┬───────┘  │
+│         │                                           │          │
+│         │ ◄─────────── HTTP notify ─────────────────┘          │
+│         │              (localhost:7734)                        │
+└─────────┼──────────────────────────────────────────────────────┘
+          │
+          │ Long-polling (outbound only)
+          ▼
+┌─────────────────────┐
+│   Telegram API      │
+└─────────┬───────────┘
+          │
+          ▼
+┌─────────────────────┐
+│   Your Phone        │
+│   (Telegram app)    │
+└─────────────────────┘
+```
 
-C3Poh fills that gap. It's a lightweight Telegram bot that:
-1. Receives your messages (allowlisted users only by default)
-2. Forwards them to Claude Code via `claude --print`
-3. Sends Claude's response back to you in Telegram
-4. Listens for notifications from [TinMan](https://github.com/andyuninvited/tinman_for_claudecode) and forwards heartbeat alerts
+**No inbound ports. No webhooks. No ngrok.** C3Poh polls Telegram's API for messages and uses localhost for TinMan notifications.
+
+---
+
+## Part of the Claude Code Toolkit
+
+C3Poh is the **voice** — it handles communication. Pair it with:
+
+| Tool | Role | Link |
+|------|------|------|
+| **TinMan** | The heart — scheduled health checks | [tinman_for_claudecode](https://github.com/andyuninvited/tinman_for_claudecode) |
+| **Heartbeat Templates** | The playbooks — ready-to-use checklists | [heartbeat-templates](https://github.com/andyuninvited/heartbeat-templates) |
+| **Agent Blueprints** | The brains — starter agent templates | [agent-blueprints](https://github.com/andyuninvited/agent-blueprints) |
+
+**The full stack:**
+```
+[TinMan] ──heartbeat──► [Claude Code] ──notify──► [C3Poh] ──message──► [Your Phone]
+                              ▲                                              │
+                              └──────────────── your reply ──────────────────┘
+```
 
 ---
 
@@ -86,13 +133,13 @@ c3poh status                        Show config and connection status
 
 ## DM policies (access control)
 
-**Don't skip this. OpenClaw users get burned by leaving this on `open`.**
+**Don't skip this.** OpenClaw users get burned by leaving this on `open`.
 
 | Policy | Who can DM | Use when |
 |--------|-----------|----------|
 | `allowlist` | Only your Telegram user IDs | **default — recommended always** |
 | `pairing` | First person to /start becomes owner | Single-user, no ID lookup |
-| `open` | Anyone with your bot link | ⚠️ Demos only, never in production |
+| `open` | Anyone with your bot link | Demos only, never production |
 | `disabled` | Nobody | Notify-only mode (outbound only) |
 
 Set via config or env var:
@@ -151,14 +198,6 @@ Pair C3Poh with [TinMan](https://github.com/andyuninvited/tinman_for_claudecode)
 ```
 
 Now when TinMan detects something (disk space low, failing tests, stale branches), it sends the alert to C3Poh → you get a Telegram message.
-
-**The full stack:**
-```
-[launchd/cron] → TinMan heartbeat → C3Poh → your Telegram
-      ↑                                            ↓
-      └──────── you DM the bot ───────────────────┘
-                    Claude Code replies
-```
 
 ---
 
@@ -223,8 +262,9 @@ pytest tests/ -v
 ## Related
 
 - [TinMan](https://github.com/andyuninvited/tinman_for_claudecode) — Heartbeat for Claude Code (the heart to C3Poh's voice)
+- [Heartbeat Templates](https://github.com/andyuninvited/heartbeat-templates) — Ready-to-use HEARTBEAT.md files
+- [Agent Blueprints](https://github.com/andyuninvited/agent-blueprints) — Starter templates for AI agents
 - [Claude Code](https://claude.ai/code) — the agentic CLI this is built for
-- [OpenClaw](https://openclaw.ai) — the inspiration (Telegram + heartbeat for a different runtime)
 
 ---
 
