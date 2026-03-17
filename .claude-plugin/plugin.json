@@ -1,0 +1,13 @@
+{
+  "name": "c3poh",
+  "description": "Telegram bridge for Claude Code. DM your agent from your phone and receive responses. Uses long-polling with no inbound ports, allowlist-based access control, and outbound-only traffic.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Andy Rosic",
+    "url": "https://github.com/andyuninvited"
+  },
+  "homepage": "https://andyuninvited.github.io/tinman_for_claudecode/",
+  "repository": "https://github.com/andyuninvited/c3poh_for_claudecode",
+  "license": "GPL-3.0",
+  "keywords": ["telegram", "notifications", "mobile", "bridge", "remote-access"]
+}
